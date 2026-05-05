@@ -1,4 +1,4 @@
-/* Estilo geral da página */
+/* --- ESTILO GERAL --- */
 body {
   font-family: Arial, sans-serif;
   background-color: #f0f2f5;
@@ -6,49 +6,78 @@ body {
   color: #333;
 }
 
-/* Isso garante que nenhum elemento "escape" da largura total */
+/* Garante que padding e bordas não aumentem o tamanho total dos elementos */
 * {
   box-sizing: border-box;
 }
 
+/* Evita que o sistema fique "esticado" demais em monitores grandes */
+main {
+  max-width: 1100px;
+  margin: 0 auto; /* Centraliza o main na tela */
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+
+/* --- GRID DE AÇÕES (PC) --- */
+.grid-acoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Divide o espaço em duas colunas iguais */
+  gap: 20px;
+}
+
+/* --- CONTAINERS (SEÇÕES) --- */
 .caixa-interacao {
   display: flex;
-  flex-direction: column; /* Força os itens a ficarem um abaixo do outro no celular */
-  width: 100%; /* Garante que a caixa ocupe a largura disponível */
-  padding: 15px;
-  gap: 12px; /* Dá um espaço elegante entre os elementos */
+  flex-direction: column; /* Organiza inputs e botões em coluna */
+  width: 100%;
+  padding: 20px;
+  gap: 12px; /* Dá um espaço elegante entre os elementos internos */
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* --- INPUTS --- */
 input {
-  width: 100%; /* Ocupa 100% da caixa pai, sem sobrar */
-  max-width: 100%; /* Segurança extra para não transbordar */
+  width: 100%;
+  max-width: 100%;
   padding: 12px;
-  font-size: 16px; /* Tamanho ideal para leitura no celular */
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s;
 }
 
-/* Estilo Base para todos os botões */
+input:focus {
+  border-color: #28a745; /* Brilho verde ao clicar no campo */
+  outline: none;
+}
+
+/* --- BOTÕES (LÓGICA DE TAMANHO E COR) --- */
 button {
-  padding: 12px 20px;
+  padding: 12px 25px;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
   font-size: 16px;
-  transition: background 0.3s; /* Deixa a mudança de cor suave */
-  width: 100%; /* Mantém a responsividade que ajustamos antes */
-  margin-bottom: 8px;
+  transition: background 0.3s; /* Deixa a mudança de cor suave ao passar o mouse */
+
+  /* AJUSTE PARA COMPUTADOR: Não estica o botão desnecessariamente */
+  width: fit-content; /* Ocupa apenas o tamanho do texto */
+  min-width: 180px; /* Garante um tamanho mínimo visualmente bom */
+  align-self: flex-start; /* Alinha o botão à esquerda no PC */
 }
 
-/* Botão de Cadastrar e Entrada (Ações Positivas) */
+/* Cores Semânticas (UX) */
 button[onclick="cadastrar()"],
 button[onclick="entrada()"] {
-  background-color: #28a745;
+  background-color: #28a745; /* Verde: Adição/Sucesso */
 }
 
 button[onclick="cadastrar()"]:hover,
@@ -56,33 +85,34 @@ button[onclick="entrada()"]:hover {
   background-color: #218838;
 }
 
-/* Botão de Saída (Ação de Movimentação/Atenção) */
 button[onclick="saida()"] {
-  background-color: #007bff;
+  background-color: #007bff; /* Azul: Movimentação/Processo */
 }
 
 button[onclick="saida()"]:hover {
   background-color: #0069d9;
 }
 
-/* Botão de Buscar (Ação Neutra/Pesquisa) */
-button[onclick="buscar()"] {
-  background-color: #6c757d;
-}
-
 /* Botão de Limpar (Ação Crítica/Perigo) */
 .btn-limpar {
-  background-color: #dc3545;
+  background-color: #dc3545; /* Vermelho: Perigo/Exclusão */
+  margin-top: 30px;
+  width: auto;
+  min-width: 250px;
+  display: block;
+  align-self: center; /* Centraliza no rodapé */
 }
 
 .btn-limpar:hover {
   background-color: #c82333;
 }
-/* Estilo da Tabela */
+
+/* --- TABELA --- */
 table {
   width: 100%;
   background: white;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
 th,
@@ -92,36 +122,87 @@ td {
   text-align: left;
 }
 
-/* Cor vermelha para quando o estoque estiver baixo */
+/* Destaque para estoque baixo */
 .alerta {
   color: red;
   font-weight: bold;
 }
 
-/* --- MEDIA QUERY (Requisito do Professor) --- */
-/* Quando a tela for menor que 600px (celular), os itens ficam um embaixo do outro */
-@media (max-width: 600px) {
+/* MELHORIA VISUAL: Efeito Zebrado na tabela para leitura profissional */
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1; /* Destaca a linha ao passar o mouse */
+}
+
+/* --- RESPONSIVIDADE (MOBILE E TABLETS) --- */
+/* Quando a tela for menor que 800px, os itens se reorganizam */
+@media (max-width: 800px) {
+  .grid-acoes {
+    grid-template-columns: 1fr; /* Desfaz as colunas, colocando uma abaixo da outra */
+    gap: 0;
+  }
+
   .caixa-interacao {
-    flex-direction: column; /* Coloca um item abaixo do outro */
-    align-items: stretch;
     padding: 15px;
   }
 
-  input,
   button {
-    width: 100%; /* Ocupa toda a largura da tela */
-    height: 45px; /* Aumenta a área de toque para o dedo */
-    font-size: 16px; /* Evita que o iOS dê zoom automático ao clicar */
-    margin-bottom: 5px;
+    width: 100%; /* No celular, o botão ocupa a largura toda */
+    height: 48px; /* Aumenta a área de toque (UX Mobile) */
+    align-self: stretch; /* Força o preenchimento total da linha */
   }
 
   h1 {
     font-size: 24px;
     text-align: center;
   }
+}
 
-  /* Permite que o usuário deslize a tabela para o lado se ela for larga */
-  section {
-    overflow-x: auto;
-  }
+/* --- DROPDOWN DE BUSCA --- */
+
+/* O container precisa de position: relative para o dropdown se posicionar em relação a ele */
+.busca-container {
+  position: relative;
+  width: 100%;
+}
+
+/* O dropdown fica escondido por padrão (display: none) */
+/* O JavaScript muda para display: block quando há resultados */
+.dropdown-busca {
+  display: none;
+  position: absolute; /* Flutua sobre a página, sem empurrar nada abaixo */
+  top: 100%;          /* Começa logo abaixo do input */
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;   /* Remove a borda de cima para "grudar" no input */
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  z-index: 100;       /* Garante que o dropdown fique na frente de tudo */
+  max-height: 240px;
+  overflow-y: auto;   /* Barra de scroll se tiver muitos resultados */
+}
+
+/* Cada item de sugestão dentro do dropdown */
+.dropdown-item {
+  padding: 11px 14px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #f0faf2;
+  color: #1a5c2a;
+  font-weight: bold;
 }
