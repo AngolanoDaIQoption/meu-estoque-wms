@@ -206,3 +206,24 @@ tbody tr:hover {
   color: #1a5c2a;
   font-weight: bold;
 }
+
+/* --- BOTÃO REMOVER ITEM (linha da tabela) --- */
+.btn-remover-item {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  width: auto;       /* Não herda o width: 100% dos botões normais */
+  min-width: unset;  /* Não herda o min-width dos botões normais */
+  height: auto;
+  align-self: auto;
+  transition: background 0.2s;
+}
+
+.btn-remover-item:hover {
+  background-color: #b02030;
+}

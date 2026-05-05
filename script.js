@@ -93,12 +93,14 @@ function atualizar(lista = produtos) {
     let classeCor = p.quantidade <= p.minimo ? "alerta" : "";
 
     // Monta a linha da tabela com as informações do produto
+    // O botão passa o índice (i) para a função saber QUAL produto remover
     tabela.innerHTML += `
         <tr>
             <td>${p.nome}</td>
             <td>${p.quantidade}</td>
             <td>${p.minimo}</td>
             <td class="${classeCor}">${status}</td>
+            <td><button class="btn-remover-item" onclick="removerItem(${i})">Remover</button></td>
         </tr>
         `;
   }
@@ -180,6 +182,20 @@ function fecharDropdown() {
   let dropdown = document.getElementById("dropdown-busca");
   dropdown.style.display = "none";
   dropdown.innerHTML = "";
+}
+
+// Remove UM produto específico da lista pelo seu índice
+function removerItem(indice) {
+  // Pega o nome do produto para mostrar na confirmação
+  let nomeProduto = produtos[indice].nome;
+
+  if (!confirm("Remover \"" + nomeProduto + "\" do estoque?")) return;
+
+  // splice(indice, 1) remove 1 elemento na posição indicada
+  produtos.splice(indice, 1);
+
+  salvar();    // Atualiza o LocalStorage sem o item removido
+  atualizar(); // Redesenha a tabela
 }
 
 // Função para limpar todas as caixinhas de texto após as ações
