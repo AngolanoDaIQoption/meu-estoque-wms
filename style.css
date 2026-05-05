@@ -6,32 +6,35 @@ body {
   color: #333;
 }
 
-/* Deixando as seções bonitinhas com Flexbox */
+/* Isso garante que nenhum elemento "escape" da largura total */
+* {
+  box-sizing: border-box;
+}
+
 .caixa-interacao {
   display: flex;
-  flex-wrap: wrap; /* Se não couber, ele pula linha */
-  gap: 10px;
+  flex-direction: column; /* Força os itens a ficarem um abaixo do outro no celular */
+  width: 100%; /* Garante que a caixa ocupe a largura disponível */
+  padding: 15px;
+  gap: 12px; /* Dá um espaço elegante entre os elementos */
   background: white;
-  padding: 20px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 input {
-  padding: 10px;
+  width: 100%; /* Ocupa 100% da caixa pai, sem sobrar */
+  max-width: 100%; /* Segurança extra para não transbordar */
+  padding: 12px;
+  font-size: 16px; /* Tamanho ideal para leitura no celular */
   border: 1px solid #ccc;
-  border-radius: 5px;
-  flex: 1; /* Faz o input crescer para ocupar o espaço */
+  border-radius: 4px;
 }
 
 button {
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  width: 100%; /* Botões grandes facilitam o toque (touch) */
+  height: 48px;
+  font-weight: bold;
 }
 
 button:hover {
@@ -65,23 +68,27 @@ td {
 /* --- MEDIA QUERY (Requisito do Professor) --- */
 /* Quando a tela for menor que 600px (celular), os itens ficam um embaixo do outro */
 @media (max-width: 600px) {
-    .caixa-interacao {
-        flex-direction: column; /* Coloca um item abaixo do outro */
-        align-items: stretch;
-        padding: 15px;
-    }
-    
-    input, button {
-        width: 100%;       /* Ocupa toda a largura da tela */
-        height: 45px;      /* Aumenta a área de toque para o dedo */
-        font-size: 16px;   /* Evita que o iOS dê zoom automático ao clicar */
-        margin-bottom: 5px;
-    }
+  .caixa-interacao {
+    flex-direction: column; /* Coloca um item abaixo do outro */
+    align-items: stretch;
+    padding: 15px;
+  }
 
-    h1 { font-size: 24px; text-align: center; }
-    
-    /* Permite que o usuário deslize a tabela para o lado se ela for larga */
-    section {
-        overflow-x: auto;
-    }
+  input,
+  button {
+    width: 100%; /* Ocupa toda a largura da tela */
+    height: 45px; /* Aumenta a área de toque para o dedo */
+    font-size: 16px; /* Evita que o iOS dê zoom automático ao clicar */
+    margin-bottom: 5px;
+  }
+
+  h1 {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  /* Permite que o usuário deslize a tabela para o lado se ela for larga */
+  section {
+    overflow-x: auto;
+  }
 }
