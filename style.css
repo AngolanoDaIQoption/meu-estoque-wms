@@ -31,16 +31,53 @@ input {
   border-radius: 4px;
 }
 
+/* Estilo Base para todos os botões */
 button {
-  width: 100%; /* Botões grandes facilitam o toque (touch) */
-  height: 48px;
+  padding: 12px 20px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   font-weight: bold;
+  font-size: 16px;
+  transition: background 0.3s; /* Deixa a mudança de cor suave */
+  width: 100%; /* Mantém a responsividade que ajustamos antes */
+  margin-bottom: 8px;
 }
 
-button:hover {
-  background-color: #218838; /* Muda de cor quando passa o mouse */
+/* Botão de Cadastrar e Entrada (Ações Positivas) */
+button[onclick="cadastrar()"],
+button[onclick="entrada()"] {
+  background-color: #28a745;
 }
 
+button[onclick="cadastrar()"]:hover,
+button[onclick="entrada()"]:hover {
+  background-color: #218838;
+}
+
+/* Botão de Saída (Ação de Movimentação/Atenção) */
+button[onclick="saida()"] {
+  background-color: #007bff;
+}
+
+button[onclick="saida()"]:hover {
+  background-color: #0069d9;
+}
+
+/* Botão de Buscar (Ação Neutra/Pesquisa) */
+button[onclick="buscar()"] {
+  background-color: #6c757d;
+}
+
+/* Botão de Limpar (Ação Crítica/Perigo) */
+.btn-limpar {
+  background-color: #dc3545;
+}
+
+.btn-limpar:hover {
+  background-color: #c82333;
+}
 /* Estilo da Tabela */
 table {
   width: 100%;
@@ -59,10 +96,6 @@ td {
 .alerta {
   color: red;
   font-weight: bold;
-}
-
-.btn-limpar {
-  background-color: #dc3545;
 }
 
 /* --- MEDIA QUERY (Requisito do Professor) --- */
