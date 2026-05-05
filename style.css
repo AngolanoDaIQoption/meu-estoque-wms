@@ -1,0 +1,74 @@
+/* Estilo geral da página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    padding: 20px;
+    color: #333;
+}
+
+/* Deixando as seções bonitinhas com Flexbox */
+.caixa-interacao {
+    display: flex;
+    flex-wrap: wrap; /* Se não couber, ele pula linha */
+    gap: 10px;
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1; /* Faz o input crescer para ocupar o espaço */
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838; /* Muda de cor quando passa o mouse */
+}
+
+/* Estilo da Tabela */
+table {
+    width: 100%;
+    background: white;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Cor vermelha para quando o estoque estiver baixo */
+.alerta {
+    color: red;
+    font-weight: bold;
+}
+
+.btn-limpar {
+    background-color: #dc3545;
+}
+
+/* --- MEDIA QUERY (Requisito do Professor) --- */
+/* Quando a tela for menor que 600px (celular), os itens ficam um embaixo do outro */
+@media (max-width: 600px) {
+    .caixa-interacao {
+        flex-direction: column;
+    }
+    
+    input, button {
+        width: 100%; /* Ocupa a largura toda do celular */
+    }
+}

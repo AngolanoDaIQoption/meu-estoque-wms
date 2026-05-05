@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Sistema de Estoque</title>
+    <!-- Aqui é onde a mágica do visual acontece, conectando o CSS -->
+    <link rel="stylesheet" href="style.css">  
+</head>
+<body>
+
+    <main>
+        <h1>Sistema de Estoque (WMS)</h1>
+
+        <!-- Bloco para cadastrar novos itens -->
+        <section class="caixa-interacao">
+            <h2>Cadastrar Produto</h2>
+            <input type="text" id="nome" placeholder="Nome do produto">
+            <input type="number" id="estoqueMin" placeholder="Estoque mínimo">
+            <button onclick="cadastrar()">Cadastrar</button>
+        </section>
+
+        <!-- Bloco para mexer nas quantidades -->
+        <section class="caixa-interacao">
+            <h2>Entrada / Saída</h2>
+            <input type="text" id="produtoMov" placeholder="Nome do produto">
+            <input type="number" id="quantidade" placeholder="Quantidade">
+            <button onclick="entrada()">Entrada</button>
+            <button onclick="saida()">Saída</button>
+        </section>
+
+        <!-- Bloco de busca rápida -->
+        <section class="caixa-interacao">
+            <h2>Buscar no Estoque</h2>
+            <input type="text" id="busca" placeholder="Digite o nome...">
+            <button onclick="buscar()">Buscar</button>
+        </section>
+
+        <!-- Tabela onde os produtos aparecem -->
+        <section>
+            <h2>Lista de Produtos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Qtd Atual</th>
+                        <th>Mínimo</th>
+                        <th>Aviso</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela"></tbody>
+            </table>
+        </section>
+
+        <br>
+        <!-- Botão de "emergência" para limpar tudo -->
+        <button class="btn-limpar" onclick="limparStorage()">Apagar tudo e recomeçar</button>
+    </main>
+
+    <!-- Puxando a lógica do JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+</html>
