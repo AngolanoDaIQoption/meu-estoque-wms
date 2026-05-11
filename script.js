@@ -1,56 +1,54 @@
-// Aqui a gente vai no "baú" do navegador ver se já tem algum produto salvo.
-// Se estiver vazio, a gente cria uma lista nova.
+// Tenta carregar os dados salvos no navegador. Se for a primeira vez, inicia um array vazio.
 let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
 
-// Variável FORA da função para o debounce funcionar corretamente.
-// Se ficasse dentro, ela seria recriada a cada tecla e o cronômetro nunca seria cancelado.
+// Variável global para o debounce. Se ficasse dentro da função de busca, 
+// ela seria recriada a cada tecla e o cronômetro não funcionaria.
 let tempoDigitacao;
 
-// Essa função serve para anotar tudo no "baú" (LocalStorage) e não perder nada.
+// Atualiza o "banco de dados" do navegador para as informações não sumirem no refresh
 function salvar() {
   localStorage.setItem("produtos", JSON.stringify(produtos));
 }
 
 function cadastrar() {
-  // Pega o que o usuário escreveu nas caixinhas
+  // Captura os dados digitados no formulário
   let nome = document.getElementById("nome").value;
   let estoqueMin = parseInt(document.getElementById("estoqueMin").value);
 
-  // Se o nome estiver em branco, a gente avisa e para por aqui
+  // Validação simples para evitar o cadastro de "produtos fantasmas"
   if (!nome) {
     alert("Ei, esqueceu de colocar o nome do produto!");
     return;
   }
 
-  // Cria uma "ficha" do produto e coloca na nossa lista principal
+  // Monta o objeto do novo produto e joga no array principal
   produtos.push({
     nome: nome,
-    quantidade: 0, // Todo produto novo começa com zero no estoque
+    quantidade: 0, // Todo cadastro novo entra zerado por padrão
     minimo: estoqueMin || 0,
   });
 
-  salvar(); // Guarda no navegador
-  atualizar(); // Mostra na tabela
-  limparInput(); // Limpa as caixas de texto
+  salvar(); 
+  atualizar(); 
+  limparInput(); 
 }
 
 function entrada() {
   let nome = document.getElementById("produtoEntrada").value;
   let qtd = parseInt(document.getElementById("qtdEntrada").value);
 
-  // CORREÇÃO E SEGURANÇA: Impede entrada de números negativos ou vazios
+  // Trava de segurança: impede que alguém digite números negativos ou deixe vazio
   if (!qtd || qtd <= 0)
     return alert("Digite uma quantidade válida maior que zero.");
 
-  // Procura o produto na lista pelo nome
   let prod = produtos.find((p) => p.nome === nome);
   if (!prod) return alert("Não achei esse produto...");
 
-  // Soma a quantidade que chegou no estoque atual
+  // Atualiza o saldo do produto no estoque
   prod.quantidade += qtd;
 
   salvar();
-  atualizar(); // Volta a mostrar a lista completa e atualizada
+  atualizar(); 
   limparInput();
 }
 
@@ -58,42 +56,38 @@ function saida() {
   let nome = document.getElementById("produtoSaida").value;
   let qtd = parseInt(document.getElementById("qtdSaida").value);
 
-  // CORREÇÃO E SEGURANÇA: Impede saída de números negativos ou vazios
   if (!qtd || qtd <= 0)
     return alert("Digite uma quantidade válida maior que zero.");
 
   let prod = produtos.find((p) => p.nome === nome);
   if (!prod) return alert("Produto não encontrado.");
 
-  // Regra de negócio: não dá para tirar o que você não tem
+  // Regra de negócio: impede que o estoque fique negativo
   if (prod.quantidade < qtd) {
     alert("Quantidade insuficiente em estoque!");
     return;
   }
 
-  // Subtrai o que saiu do estoque
   prod.quantidade -= qtd;
 
   salvar();
-  atualizar(); // Volta a mostrar a lista completa e atualizada
+  atualizar(); 
   limparInput();
 }
 
-// Essa função redesenha a tabela toda vez que algo muda
+// Redesenha a tabela inteira sempre que houver alguma alteração nos dados
 function atualizar(lista = produtos) {
   let tabela = document.getElementById("tabela");
-  tabela.innerHTML = ""; // Limpa a tabela velha para colocar a nova
+  tabela.innerHTML = ""; // Zera a tabela antes de popular novamente
 
-  // O laço de repetição (for) vai passar item por item da lista
   for (let i = 0; i < lista.length; i++) {
     let p = lista[i];
 
-    // Se a quantidade for menor ou igual ao mínimo, aparece o aviso em vermelho
+    // Checa se o item atingiu o estoque mínimo para disparar o alerta visual
     let status = p.quantidade <= p.minimo ? "ESTOQUE BAIXO!" : "OK";
     let classeCor = p.quantidade <= p.minimo ? "alerta" : "";
 
-    // Monta a linha da tabela com as informações do produto
-    // O botão passa o índice (i) para a função saber QUAL produto remover
+    // O botão de remover já recebe o índice (i) para saber exatamente quem deletar
     tabela.innerHTML += `
         <tr>
             <td>${p.nome}</td>
@@ -106,64 +100,54 @@ function atualizar(lista = produtos) {
   }
 }
 
-// Função de busca dinâmica com DEBOUNCE (evita processar cada letra ao mesmo tempo)
-// É async porque usa "await" para simular um tempo de resposta, como em um servidor real
+// Busca dinâmica com técnica de Debounce (para evitar sobrecarga a cada tecla digitada)
 async function buscar() {
-  // 1. Pega o texto que o usuário digitou e converte para minúsculo (para comparar sem distinção de maiúsculas)
   let texto = document.getElementById("busca").value.toLowerCase();
 
-  // 2. Esconde o dropdown enquanto aguarda o usuário terminar de digitar
+  // Fecha o dropdown temporariamente enquanto o usuário ainda está digitando
   fecharDropdown();
-
-  // 3. Cancela o cronômetro anterior. Sem isso, cada letra dispararia uma busca separada.
   clearTimeout(tempoDigitacao);
 
-  // 4. Se o campo estiver vazio, volta a mostrar a tabela completa e para por aqui
+  // Se o usuário apagar tudo, restaura a tabela original e encerra a função
   if (texto === "") {
     atualizar();
     return;
   }
 
-  // 5. Cria um novo cronômetro. A busca SÓ acontece depois de 350ms sem digitar.
-  //    Isso se chama "Debounce" — é uma técnica usada em buscas profissionais.
+  // Só executa a busca de fato após 350ms de inatividade no teclado
   tempoDigitacao = setTimeout(async () => {
-
-    // 6. "await" pausa a função aqui e espera 150ms antes de continuar.
-    //    Simula o tempo de resposta de um servidor real (uma API, por exemplo).
+    
+    // Pequeno delay intencional para simular o tempo de resposta de uma API real
     await new Promise((resolve) => setTimeout(resolve, 150));
 
-    // 7. Filtra os produtos cujo nome COMEÇA com o texto digitado
     let filtrados = produtos.filter((p) =>
       p.nome.toLowerCase().startsWith(texto)
     );
 
-    // 8. Mostra os resultados no dropdown abaixo do campo de busca
     mostrarDropdown(filtrados);
-
-  }, 350); // Milissegundos de espera antes de executar a busca
+  }, 350); 
 }
 
-// Monta e exibe a lista de sugestões abaixo do campo de busca
+// Cria e exibe a caixinha flutuante com os resultados da pesquisa
 function mostrarDropdown(lista) {
   let dropdown = document.getElementById("dropdown-busca");
 
-  // Se não achou nenhum produto, esconde o dropdown e não mostra nada
+  // Se o filtro não encontrar nada, o dropdown nem aparece
   if (lista.length === 0) {
     fecharDropdown();
     return;
   }
 
-  // Limpa o conteúdo anterior do dropdown
   dropdown.innerHTML = "";
 
-  // Cria um item clicável para cada produto encontrado
+  // Cria as opções clicáveis dinamicamente
   for (let i = 0; i < lista.length; i++) {
     let p = lista[i];
     let item = document.createElement("div");
     item.className = "dropdown-item";
     item.textContent = p.nome + " — Estoque: " + p.quantidade;
 
-    // Ao clicar num item, preenche o campo de busca e filtra a tabela
+    // Ação ao clicar em uma sugestão: joga o nome pro input e filtra a tabela
     item.onclick = function () {
       document.getElementById("busca").value = p.nome;
       atualizar([p]);
@@ -173,32 +157,29 @@ function mostrarDropdown(lista) {
     dropdown.appendChild(item);
   }
 
-  // Torna o dropdown visível
   dropdown.style.display = "block";
 }
 
-// Esconde e limpa o dropdown
 function fecharDropdown() {
   let dropdown = document.getElementById("dropdown-busca");
   dropdown.style.display = "none";
   dropdown.innerHTML = "";
 }
 
-// Remove UM produto específico da lista pelo seu índice
+// Exclui um produto específico usando a posição dele no array
 function removerItem(indice) {
-  // Pega o nome do produto para mostrar na confirmação
   let nomeProduto = produtos[indice].nome;
 
+  // Pede confirmação antes de fazer a exclusão definitiva
   if (!confirm("Remover \"" + nomeProduto + "\" do estoque?")) return;
 
-  // splice(indice, 1) remove 1 elemento na posição indicada
   produtos.splice(indice, 1);
 
-  salvar();    // Atualiza o LocalStorage sem o item removido
-  atualizar(); // Redesenha a tabela
+  salvar();    
+  atualizar(); 
 }
 
-// Função para limpar todas as caixinhas de texto após as ações
+// Limpa todos os inputs da tela para o usuário não precisar apagar na mão
 function limparInput() {
   document.getElementById("nome").value = "";
   document.getElementById("estoqueMin").value = "";
@@ -210,7 +191,7 @@ function limparInput() {
   fecharDropdown();
 }
 
-// Função de perigo para deletar TUDO se o usuário quiser recomeçar do zero
+// Hard reset: apaga o LocalStorage e zera o array (Ação destrutiva)
 function limparStorage() {
   if (
     !confirm(

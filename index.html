@@ -2,19 +2,16 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <!-- Resolve a responsividade no celular, adaptando a escala à tela -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WMS Tech - Sistema de Estoque</title>
-    <!-- O caminho relativo exige que style.css esteja na MESMA pasta -->
     <link rel="stylesheet" href="style.css" />
   </head>
+  
   <body onload="atualizar()">
-    <!-- Garante que a tabela carregue os dados do LocalStorage ao abrir -->
 
     <main>
       <h1>Sistema de Estoque (WMS)</h1>
 
-      <!-- Bloco de cadastro no topo ocupando a largura total permitida -->
       <section class="caixa-interacao">
         <h2>Cadastrar Produto</h2>
         <input type="text" id="nome" placeholder="Nome do produto" />
@@ -22,9 +19,7 @@
         <button onclick="cadastrar()">Cadastrar</button>
       </section>
 
-      <!-- CONTAINER GRID: Coloca os blocos lado a lado no PC e empilha no Celular -->
       <div class="grid-acoes">
-        <!-- Bloco de Entrada -->
         <section class="caixa-interacao">
           <h2>Registrar Entrada</h2>
           <input
@@ -40,7 +35,6 @@
           <button onclick="entrada()">Confirmar Entrada</button>
         </section>
 
-        <!-- Bloco de Saída -->
         <section class="caixa-interacao">
           <h2>Registrar Saída</h2>
           <input type="text" id="produtoSaida" placeholder="Nome do produto" />
@@ -53,10 +47,8 @@
         </section>
       </div>
 
-      <!-- Bloco de busca rápida com filtro em tempo real -->
       <section class="caixa-interacao">
         <h2>Buscar no Estoque</h2>
-        <!-- O evento onkeyup chama a função a cada tecla SOLTA (key released) -->
         <div class="busca-container">
           <input
             type="text"
@@ -65,14 +57,11 @@
             onkeyup="buscar()"
             autocomplete="off"
           />
-          <!-- Dropdown de sugestões — preenchido e exibido pelo JavaScript -->
           <div id="dropdown-busca" class="dropdown-busca"></div>
         </div>
       </section>
 
-      <!-- Tabela onde os produtos aparecem -->
       <section style="overflow-x: auto">
-        <!-- Permite scroll horizontal em tabelas largas no celular -->
         <h2>Lista de Produtos</h2>
         <table>
           <thead>
@@ -89,13 +78,11 @@
       </section>
 
       <br />
-      <!-- Botão de "emergência" para limpar tudo -->
       <button class="btn-limpar" onclick="limparStorage()">
         Apagar tudo e recomeçar
       </button>
     </main>
 
-    <!-- Puxando a lógica do JavaScript -->
     <script src="script.js"></script>
   </body>
 </html>
